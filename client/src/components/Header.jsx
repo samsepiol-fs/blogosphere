@@ -27,7 +27,7 @@ export default function Header() {
                     <FaSearch className='text-slate-600' />
                 </button>
             </form>
-            <ul className='flex gap-2'>
+            <ul className='flex gap-4'>
                 <Link to={'/'}>
                     <li className='hidden sm:inline hover:underline text-slate-700'>
                         Home
