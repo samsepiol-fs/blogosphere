@@ -90,7 +90,7 @@ export default function SignUp() {
             Sign In
           </Link>
         </div>
-        {error && <p className='text-red-800'> {error} </p> }
+        {error && <p className='text-red-800 mt-5'> {error} </p> }
       </div>
     </div>
   )
