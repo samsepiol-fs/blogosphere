@@ -1,10 +1,10 @@
 import {selctor} from 'recoil';
-import { currentUserState } from '../atoms/userAtoms/userState';
+import { userState } from '../atoms/userAtoms/userState.js';
 
 export const isAuthenticatedSelector = selctor({
     key: 'isAuthenticatedSelector',
     get: ({get}) => {
-        const currentUser = get(currentUserState);
+        const currentUser = get(userState);
 
         return currentUser !== null;
     },
