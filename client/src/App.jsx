@@ -6,6 +6,7 @@ import SignUp from './pages/SignUp'
 import About from './pages/About'
 import Search from './pages/Search'
 import Header from './components/Header'
+import Dashboard from './pages/Dashboard'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/about' element={<About />} />
         <Route path='/search' element={<Search />} />
+        <Route path='/dashboard' element={<Dashboard /> } />
       </Routes>
     </BrowserRouter>
   )
