@@ -2,17 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '../recoil/atoms/userAtoms/userState';
-import { loadingState } from '../recoil/atoms/userAtoms/loadingState';
-import { errorState } from '../recoil/atoms/userAtoms/errorState';
+import { isUserLoading } from '../recoil/selectors/userSelectors.js';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
   const setUser = useSetRecoilState(userState);
-  const setLoading = useSetRecoilState(loadingState);
-  const setError = useSetRecoilState(errorState);
-
-  const error = useRecoilValue(errorState);
-  const isLoading = useRecoilValue(loadingState);
+  const loading = useRecoilValue(isUserLoading);
 
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -23,7 +19,7 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setUser({isLoading:true});
     try {
       const res = await fetch(`/api/auth/signin`,{
         method: 'POST',
@@ -34,16 +30,15 @@ export default function SignIn() {
       });
       const data = await res.json();
       if(data.success === false) {
-        setLoading(false);
+        setUser({isLoading: false, user: null});
         setError(data.message);
         return;
       }
-      setUser(data);
+      setUser({isLoading: false, user: data});
       setError(null);
-      setLoading(false);
-      navigate('/dashboard')
+      navigate('/')
     } catch (error) {
-      setLoading(false);
+      setUser({isLoading:false, user: null});
       setError(error.message);
     }
   };
@@ -81,7 +76,7 @@ export default function SignIn() {
               rounded-lg uppercase hover:opacity-95
               p-3 disabled:opacity-80 text-white'
             >
-              {isLoading? 'Signing In...' : 'Sign In'}
+              {loading? 'Signing In...' : 'Sign In'}
           </button>
         </form>
         <div className="flex gap-2 mt-5">
