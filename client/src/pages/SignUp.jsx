@@ -1,13 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { userState } from '../recoil/atoms/userAtoms/userState.js'
-import { errorState } from '../recoil/atoms/userAtoms/errorState.js';
-import { loadingState } from '../recoil/atoms/userAtoms/loadingState.js';
+import { useState } from 'react';
+import { isUserLoading } from '../recoil/selectors/userSelectors.js';
 
 export default function SignUp() {
-  const [formData, setFormData] = useRecoilState(userState);
-  const [error, setError] = useRecoilState(errorState);
-  const [loading, setLoading] = useRecoilState(loadingState);
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
+  const setUser = useSetRecoilState(userState);
+
+  const loading = useRecoilValue(isUserLoading);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -18,7 +20,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      setUser({isLoading: true});
       const res = await fetch(`/api/auth/signup`, {
         method: 'POST',
         headers: {
@@ -28,15 +30,15 @@ export default function SignUp() {
       });
       const data = await res.json();
       if(data.success === false) {
-        setLoading(false);
         setError(data.message);
+        setUser({isLoading: false, user: null});
         return;
       }
-      setLoading(false);
       setError(null);
+      setUser({isLoading: false, user: data})
       navigate('/sign-in');
     } catch (error) {
-      setLoading(false);
+      setUser({isLoading:false, user: null});
       setError(error.message);
     }
   }
